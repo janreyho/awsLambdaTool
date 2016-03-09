@@ -1,18 +1,8 @@
 #!/bin/bash
-
-#txbdown=true txbrename=true txbcptos3=true txbtrancode=true txbremoterm=true txblocalmv=true ./txbjob.sh test
-localdir=/home/ubuntu/tuxiaobei/src
-bakdir=/home/ubuntu/tuxiaobei/srcbak
-s3dir=/mnt/s3/tuxiaobei/videos/src
-s3bucket=ottcloud
-bucksrc=tuxiaobei/videos/src
-buckdst=tuxiaobei/videos/dst
-txbtool=/home/ubuntu/tuxiaobei/txbtool
-logpath=/home/ubuntu/tuxiaobei/log
-
+source ~/gochina/gochina/cpconfig/$2
 echo ""
 echo ""
-echo "#############"
+echo "#############"$2
 echo ` TZ='Asia/Shanghai' date +%Y-%m-%d-%H-%M-%S `": tuxiaobei job start"
 echo $localdir
 echo $bakdir
@@ -22,9 +12,9 @@ echo $bucksrc
 echo $buckdst
 
 
-echo "bypy syndown / $localdir"
+echo "bypy syndown /$2 $localdir"
 if [ "$txbdown" == "true" ]; then
-	/usr/local/bin/bypy -r 1000000 syncdown / $localdir
+	/usr/local/bin/bypy -r 1000000 syncdown /$2 $localdir
 fi
 
 num=`ls $localdir | wc -l`
@@ -35,13 +25,13 @@ fi
 
 
 treelogfile=tree_`TZ='Asia/Shanghai' date +%Y-%m-%d`.log
-tree $localdir >> $logpath"/"treelogfile
-echo "renametxb.sh $localdir"
+tree $localdir > $logpath"/"treelogfile
+echo "rename.sh $localdir"
 if [ "$txbrename" == "true" ]; then
-	$txbtool"/"renametxb.sh $localdir
+	$txbtool"/"rename.sh $localdir $2
 fi
 tree $localdir >> $logpath"/"treelogfile
-/usr/bin/mail -s 'tuxiaobei-'$var'更新' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com,liruizheng@gochinatv.com < $logpath"/"treelogfile
+/usr/bin/mail -s 'tuxiaobei-'$var'更新' hejiayi@gochinatv.com < $logpath"/"treelogfile
 
 
 
@@ -60,15 +50,16 @@ do
 
 	echo "bypy rm $file"
 	if [ "$txbremoterm" == "true" ]; then
-		/usr/local/bin/bypy rm $file
+		/usr/local/bin/bypy rm $2"/"$file
 	fi
 done
 
-echo "mv $localdir"/"* $bakdir"
+echo "rmdd $localdir"/"*"
 if [ "$txblocalmv" == "true" ]; then
-	mv $localdir"/"* $bakdir
+	rm -rf $localdir"/"* 
 fi
 
 
 
 echo ` TZ='Asia/Shanghai' date +%Y-%m-%d-%H-%M-%S `": tuxiaobei job done"
+
