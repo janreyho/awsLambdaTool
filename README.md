@@ -1,7 +1,7 @@
-# 兔小贝转码等自动化运营工具
+#全景中国自动化运营工具
 
 ### 定时任务
-	
+
 	//北京时间24:00:00，任务开始执行
 	crontab －e
 	0 16 * * * /home/ubuntu/tuxiaobei/txbtool/startjob.sh
@@ -16,8 +16,8 @@
 	//txbremoterm:删除从百度云已下载的目录
 	//txblocalmv:移除本地下载的目录
 	txbdown=true txbrename=true txbcptos3=true txbtrancode=true txbremoterm=true txblocalmv=true ./txbjob.sh no
-	
-	
+
+
 ### 多码率hls视频预热
 
 	//下载前
@@ -30,7 +30,7 @@
 
 	//自动下载多码率m3u8及相关ts
 	➜  txb  ./download-hls.sh english http://video.ottcloud.tv/tuxiaobei/videos/dst
-	
+
 	//下载后
 	➜  txb  tree  english -L 2
 	english
