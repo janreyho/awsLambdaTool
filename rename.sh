@@ -15,7 +15,7 @@ function fun(){
                         if [ -d $1"/"$file1"/"$file2 ]; then
 
                         cd $1"/"$file1"/"$file2 
-                        rename 's/^(\d+)(?:[^.]*)(\.\w+)/$1$2/' *.mp4
+                        rename 's/^(\d+)(?:[^.]*)(\.\w+)/$1$2/' *
                         #cd -
                         echo "hejiayi"
 
