@@ -17,14 +17,15 @@ from boto.s3.connection import S3Connection
 
 
 def usage():
-  print "use:python *.py -b bucket -i src -o dst -t test"
+  print "use:python *.py -b bucket -f (file|folder) -i src -o dst -t test"
   sys.exit()
 
-opts, args = getopt.getopt(sys.argv[1:], "hb:i:o:t:")
+opts, args = getopt.getopt(sys.argv[1:], "hb:f:i:o:t:")
 bucket=""
 src=""
 dst=""
 TEST=""
+fileflag=""
 
 for op, value in opts:
     if op == "-b":
@@ -35,11 +36,13 @@ for op, value in opts:
         dst = value
     elif op == "-t":
         TEST = value
+    elif op == "-f":
+        fileflag = value
     elif op == "-h":
         usage()
 
 num = len(sys.argv)
-if 9 != num:
+if 11 != num:
   print "error para num="+str(num)
   usage()
   sys.exit()
@@ -84,7 +87,14 @@ for key in bucket.list(src,''):
         continue
 
     keypath = key.name[0:num1+1]
-    keyoutpath = keypath.replace(src,dst,1)
+
+    if "file" == fileflag:
+        keyoutpath = keypath.replace(keypath,dst,1)
+    elif "folder" == fileflag:
+        keyoutpath = keypath.replace(src,dst,1)
+    else:
+        print "error: not file or folder"
+        sys.exit()
 
 
     findkey = keyoutpath + output_key +'/'+ output_key +'.m3u8'
@@ -152,8 +162,3 @@ for key in bucket.list(src,''):
     create_job_result=transcoder_client.create_job(**create_job_request)
     print 'transcoded:' +output_key
     print 'HLS job has been created: ', json.dumps(create_job_result['Job'], indent=4, sort_keys=True)
-
-
-
-
-
