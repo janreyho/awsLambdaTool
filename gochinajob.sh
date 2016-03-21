@@ -31,8 +31,8 @@ if [ "$txbrename" == "true" ]; then
 	$txbtool"/"rename.sh $localdir $2
 fi
 tree $localdir >> $logpath"/"treelogfile
-/usr/bin/mail -s $2'-'$var'更新' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $logpath"/"treelogfile
-
+/usr/bin/mail -s $2'-'$var'更新tree' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $logpath"/"treelogfile
+/usr/bin/mail -s $2'-'$var'更新json' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $txbtool/$2.json
 
 
 echo "cp -rf $localdir"/"* $s3dir"
