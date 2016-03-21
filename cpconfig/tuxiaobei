@@ -8,13 +8,14 @@ bucksrc=tuxiaobei/videos/src
 buckdst=tuxiaobei/videos/dst
 txbtool=~/gochina/gochina
 logpath=~/gochina/tuxiaobei/log
+thumbgap=10s
 
 txbdown=true
-txbrename=true 
-txbcptos3=true 
-txbtrancode=true 
-txbremoterm=true 
-txblocalmv=true 
+txbrename=true
+txbcptos3=true
+txbtrancode=true
+txbremoterm=true
+txblocalmv=true
 
 
 txbmapsrc[0]="故事"

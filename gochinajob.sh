@@ -45,7 +45,7 @@ for file in ` ls $localdir `
 do
 	echo "python awsTranscodeHls.py -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1"
 	if [ "$txbtrancode" == "true" ]; then
-		python $txbtool"/"awsTranscodeHls.py -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1
+		python $txbtool"/"awsTranscodeHls.py -f folder -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1
 	fi
 
 	echo "bypy rm $file"
@@ -56,10 +56,9 @@ done
 
 echo "rmdd $localdir"/"*"
 if [ "$txblocalmv" == "true" ]; then
-	rm -rf $localdir"/"* 
+	rm -rf $localdir"/"*
 fi
 
 
 
 echo ` TZ='Asia/Shanghai' date +%Y-%m-%d-%H-%M-%S `": tuxiaobei job done"
-
