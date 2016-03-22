@@ -68,16 +68,17 @@ function fun(){
                           id=`jq --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].id | tonumber' $txbtool/$2.json`
                           jq --arg var $bucksrc/$file1/$file2/$id".mp4" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].src=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
+                          jq --arg var $bucksrc/$file1/$file2/$id".png" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].pagepic=$var' $txbtool/$2.json > $txbtool/var1.json
+                          mv $txbtool/var1.json $txbtool/$2.json
                           jq --arg var $buckdst/$file2/$id/$id".m3u8" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].dst=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
                           jq --arg var $buckdst/$file2/$id"/00001.jpg" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].thumbnails=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
-                          jq --arg var $buckdst/$file2/$id".png" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].pagepic=$var' $txbtool/$2.json > $txbtool/var1.json
-                          mv $txbtool/var1.json $txbtool/$2.json
 
-                          if [ -f $1/$file1/$file2/$id".png" ]; then
-                            cp -rf $1/$file1/$file2/$id".png" $buckdst
-                          fi
+
+                          # if [ -f $1/$file1/$file2/$id".png" ]; then
+                          #   cp -rf $1/$file1/$file2/$id".png" $buckdst
+                          # fi
                           pos2=`expr $pos2 + 1`
                   done
                   fi
