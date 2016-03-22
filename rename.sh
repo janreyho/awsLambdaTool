@@ -7,6 +7,7 @@ echo "Second Method: ${txbmapdst[@]}"
 function fun(){
         # cp $txbtool/txbvar.json $txbtool/$2.json
         echo {} > $txbtool/$2.json
+        IFS=$'\t\n'
         jq --arg cpvar $2 '.cp=$cpvar' $txbtool/$2.json > $txbtool/var1.json
         mv $txbtool/var1.json $txbtool/$2.json
         jq --arg var $thumbgap '.thumbgap=$var' $txbtool/$2.json > $txbtool/var1.json
@@ -85,6 +86,7 @@ function fun(){
         fi
         done
         cat $txbtool/$2.json
+        IFS=$' \t\n'
 }
 
 fun $1 $2
