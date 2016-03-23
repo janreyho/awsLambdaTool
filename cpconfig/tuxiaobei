@@ -3,6 +3,7 @@
 localdir=~/gochina/tuxiaobei/src
 bakdir=~/gochina/tuxiaobei/srcbak
 s3dir=/mnt/s3/tuxiaobei/videos/src
+s3dir2=/mnt/s3/tuxiaobei/videos/dst
 s3bucket=ottcloud
 bucksrc=tuxiaobei/videos/src
 buckdst=tuxiaobei/videos/dst

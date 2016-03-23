@@ -17,15 +17,16 @@ from boto.s3.connection import S3Connection
 
 
 def usage():
-  print "use:python *.py -b bucket -f (file|folder) -i src -o dst -t test"
+  print "use:python *.py -u time -b bucket -f (file|folder) -i src -o dst -t test"
   sys.exit()
 
-opts, args = getopt.getopt(sys.argv[1:], "hb:f:i:o:t:")
+opts, args = getopt.getopt(sys.argv[1:], "hb:u:f:i:o:t:")
 bucket=""
 src=""
 dst=""
 TEST=""
 fileflag=""
+time=""
 
 for op, value in opts:
     if op == "-b":
@@ -38,11 +39,13 @@ for op, value in opts:
         TEST = value
     elif op == "-f":
         fileflag = value
+    elif op == "-u":
+        time = value
     elif op == "-h":
         usage()
 
 num = len(sys.argv)
-if 11 != num:
+if 13 != num:
   print "error para num="+str(num)
   usage()
   sys.exit()
@@ -50,6 +53,7 @@ if 11 != num:
 print "bucket:" +bucket
 print "src:" +src
 print "dst:" +dst
+print "time:" +time
 
 
 pipeline_id = '1451458179766-qniixd'
@@ -83,6 +87,7 @@ for key in bucket.list(src,''):
         continue
 
     output_key = key.name[num1+1:num2]
+    output_path = output_key + '_' + time
     if 0 == len(output_key):
         continue
 
@@ -97,7 +102,7 @@ for key in bucket.list(src,''):
         sys.exit()
 
 
-    findkey = keyoutpath + output_key +'/'+ output_key +'.m3u8'
+    findkey = keyoutpath + output_path +'/'+ output_key +'.m3u8'
     print "findkey:"+findkey
     if bucket.get_key(findkey):
         print '****exist:'+findkey
@@ -152,7 +157,7 @@ for key in bucket.list(src,''):
     create_job_request = {
         'pipeline_id' : pipeline_id,
         'input_name' : job_input,
-        'output_key_prefix' : keyoutpath + output_key +'/',
+        'output_key_prefix' : keyoutpath + output_path +'/',
         'outputs' : job_outputs,
         'playlists' : [ playlist ]
     }

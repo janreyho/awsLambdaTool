@@ -3,7 +3,7 @@ source ~/gochina/gochina/cpconfig/$2
 echo ""
 echo ""
 echo "#############"$2
-echo ` TZ='Asia/Shanghai' date +%Y-%m-%d-%H-%M-%S `": tuxiaobei job start"
+echo $3 ": tuxiaobei job start"
 echo $localdir
 echo $bakdir
 echo $s3dir
@@ -28,13 +28,20 @@ treelogfile=tree_`TZ='Asia/Shanghai' date +%Y-%m-%d`.log
 tree $localdir > $logpath"/"treelogfile
 echo "rename.sh $localdir"
 if [ "$txbrename" == "true" ]; then
-	$txbtool"/"rename.sh $localdir $2
+	$txbtool"/"rename.sh $localdir $2 $3 $1
 fi
 tree $localdir >> $logpath"/"treelogfile
-/usr/bin/mail -s $2'-'$var'更新tree' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $logpath"/"treelogfile
-/usr/bin/mail -s $2'-'$var'更新json' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $txbtool/$2.json
-curl -F stream=@$txbtool/$2.json 'http://vrsclone.herokuapp.com/api/v1/episodes/incoming.json'
-mv $txbtool/$2.json $txbtool/data/$2-$var.json
+
+if [ "no" = $1 ];then
+	echo sendemail2
+	/usr/bin/mail -s $2'_'$3'更新tree' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $logpath"/"treelogfile
+	/usr/bin/mail -s $2'_'$3'更新json' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $txbtool/$2.json
+	curl -F stream=@$txbtool/$2.json 'http://vrsclone.herokuapp.com/api/v1/episodes/incoming.json'
+	mv $txbtool/$2.json $txbtool/data/$2"_"$3.json
+else
+	/usr/bin/mail -s $2'_'$3'更新tree' hejiayi@gochinatv.com < $logpath"/"treelogfile
+	/usr/bin/mail -s $2'_'$3'更新json' hejiayi@gochinatv.com < $txbtool/$2.json
+fi
 
 echo "cp -rf $localdir"/"* $s3dir"
 if [ "$txbcptos3" == "true" ]; then
@@ -44,9 +51,9 @@ fi
 
 for file in ` ls $localdir `
 do
-	echo "python awsTranscodeHls.py -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1"
+	echo "python awsTranscodeHls.py -u $3 -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1"
 	if [ "$txbtrancode" == "true" ]; then
-		python $txbtool"/"awsTranscodeHls.py -f folder -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1
+		python $txbtool"/"awsTranscodeHls.py -u $3 -f folder -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1
 	fi
 
 	echo "bypy rm $file"

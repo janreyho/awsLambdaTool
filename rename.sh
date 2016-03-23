@@ -26,6 +26,7 @@ function fun(){
                         # 节目名称
                         for file3 in ` ls $1/$file1/$file2 `
                         do
+                        if [ "mp4" = ${file3##*.} ];then
                         echo $file3
                           namevar=`echo $file3 | sed 's/\([0-9]*\)\(.*\)\(\..*\)/\2/g'`
                           idvar=`echo $file3 | sed 's/\([0-9]*\)\(.*\)\(\..*\)/\1/g'`
@@ -34,6 +35,7 @@ function fun(){
                           jq --arg var $idvar --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].id=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
                           pos2=`expr $pos2 + 1`
+                        fi
                         done
 
                         cd $1/$file1/$file2
@@ -65,21 +67,27 @@ function fun(){
                   # 节目名称
                   for file3 in ` ls $1/$file1/$file2 `
                   do
+                    if [ "mp4" = ${file3##*.} ];then
                           id=`jq --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].id | tonumber' $txbtool/$2.json`
                           jq --arg var $bucksrc/$file1/$file2/$id".mp4" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].src=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
-                          jq --arg var $bucksrc/$file1/$file2/$id".png" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].pagepic=$var' $txbtool/$2.json > $txbtool/var1.json
+                          jq --arg var $buckdst/$file2/$id"_"$3/$id".png" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].pagepic=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
-                          jq --arg var $buckdst/$file2/$id/$id".m3u8" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].dst=$var' $txbtool/$2.json > $txbtool/var1.json
+                          jq --arg var $buckdst/$file2/$id"_"$3/$id".m3u8" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].dst=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
-                          jq --arg var $buckdst/$file2/$id"/00001.jpg" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].thumbnails=$var' $txbtool/$2.json > $txbtool/var1.json
+                          jq --arg var $buckdst/$file2/$id"_"$3"/00001.jpg" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].thumbnails=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
 
 
-                          # if [ -f $1/$file1/$file2/$id".png" ]; then
-                          #   cp -rf $1/$file1/$file2/$id".png" $buckdst
-                          # fi
+                          if [ -f $1/$file1/$file2/$id".png" ]; then
+                            echo " cp -rf $1/$file1/$file2/$id".png" $s3dir2/$file2/$id"_"$3/$id".png" "
+                            if [ "no" = $4 ];then
+                            mkdir $s3dir2/$file2/$id"_"$3
+                            cp -rf $1/$file1/$file2/$id".png" $s3dir2/$file2/$id"_"$3/$id".png"
+                            fi
+                          fi
                           pos2=`expr $pos2 + 1`
+                    fi
                   done
                   fi
                 pos1=`expr $pos1 + 1`
@@ -90,4 +98,4 @@ function fun(){
         IFS=$' \t\n'
 }
 
-fun $1 $2
+fun $1 $2 $3 $4
