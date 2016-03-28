@@ -32,15 +32,14 @@ if [ "$txbrename" == "true" ]; then
 fi
 tree $localdir >> $logpath"/"treelogfile
 
+cat $txbtool/$2.json >> $logpath"/"treelogfile
 if [ "no" = $1 ];then
 	echo sendemail2
 	/usr/bin/mail -s $2'_'$3'更新tree' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $logpath"/"treelogfile
-	/usr/bin/mail -s $2'_'$3'更新json' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $txbtool/$2.json
 	curl -F stream=@$txbtool/$2.json 'http://vrsclone.herokuapp.com/api/v1/episodes/incoming.json'
 	mv $txbtool/$2.json $txbtool/data/$2"_"$3.json
 else
 	/usr/bin/mail -s $2'_'$3'更新tree' hejiayi@gochinatv.com < $logpath"/"treelogfile
-	/usr/bin/mail -s $2'_'$3'更新json' hejiayi@gochinatv.com < $txbtool/$2.json
 fi
 
 echo "cp -rf $localdir"/"* $s3dir"
