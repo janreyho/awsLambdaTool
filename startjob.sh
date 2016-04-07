@@ -1,4 +1,4 @@
-var=` TZ='Asia/Shanghai' date +%Y%m%d%M%S `
+var=` TZ='Asia/Shanghai' date +%Y%m%d%H%M%S `
 userfolder=~
 echo $var
 
