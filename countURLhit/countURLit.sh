@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./countHit.sh http://xxx.com url.txt
+# ./countURLHit.sh http://xxx.com url.txt
 
 url="null"
 linenum=0
