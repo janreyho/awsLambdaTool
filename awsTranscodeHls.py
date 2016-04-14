@@ -18,16 +18,17 @@ from boto.s3.connection import S3Connection
 
 
 def usage():
-  print "use:python *.py -u time -b bucket -f (file|folder) -i src -o dst -t test"
+  print "use:python *.py -u time -b bucket -c cp -f (file|folder) -i src -o dst -t test"
   sys.exit()
 
-opts, args = getopt.getopt(sys.argv[1:], "hb:u:f:i:o:t:")
+opts, args = getopt.getopt(sys.argv[1:], "hb:c:u:f:i:o:t:")
 bucket=""
 src=""
 dst=""
 TEST=""
 fileflag=""
 time=""
+contProv=""
 
 for op, value in opts:
     if op == "-b":
@@ -42,11 +43,13 @@ for op, value in opts:
         fileflag = value
     elif op == "-u":
         time = value
+    elif op == "-c":
+        contProv = value
     elif op == "-h":
         usage()
 
 num = len(sys.argv)
-if 13 != num:
+if 15 != num:
   print "error para num="+str(num)
   usage()
   sys.exit()
@@ -76,8 +79,8 @@ transcoder_client = boto.elastictranscoder.connect_to_region(region)
 conn = S3Connection()
 bucket = conn.get_bucket(bucket)
 
-file_object = open('resolution.txt', 'w')
-file_transcode = open('transcode.txt', 'w')
+file_object = open('/home/ubuntu/gochina/'+contProv+'/log/resolution.txt', 'w')
+file_transcode = open('/home/ubuntu/gochina/'+contProv+'/log/transcode.txt', 'w')
 for key in bucket.list(src,''):
     # print key.name
     num1=key.name.rfind('/',0,len(key.name))
@@ -132,7 +135,7 @@ for key in bucket.list(src,''):
         'SegmentDuration' : segment_duration,
     }
     hls_4000k = {
-        'Key' : 'hls2500k/' + output_key,
+        'Key' : 'hls4000k/' + output_key,
         'PresetId' : hls_4000k_mypreset_id,
         'SegmentDuration' : segment_duration,
     }
@@ -157,16 +160,16 @@ for key in bucket.list(src,''):
         if 1200000 > int(c['format']['bit_rate']):
             job_outputs = [ hls_0800k]
         else:
-            job_outputs = [ hls_1600k,hls_0800k]
+            job_outputs = [ hls_0800k,hls_1600k]
     elif 1088 == c['streams'][0]['coded_height']:
         if 1200000 > int(c['format']['bit_rate']):
             job_outputs = [ hls_0800k]
         elif 2000000 > int(c['format']['bit_rate']):
-            job_outputs = [ hls_1600k,hls_0800k]
+            job_outputs = [ hls_0800k,hls_1600k]
         elif 4000000 > int(c['format']['bit_rate']):
-            job_outputs = [ hls_2500k,hls_0800k,hls_1600k]
+            job_outputs = [ hls_0800k,hls_1600k,hls_2500k]
         else:
-            job_outputs = [ hls_4000k,hls_2500k,hls_0800k,hls_1600k]
+            job_outputs = [ hls_0800k,hls_1600k,hls_2500k,hls_4000k]
     else:
         file_object.write('ERROR:coded_height:' + key.name + '\n')
 

@@ -50,9 +50,9 @@ fi
 
 for file in ` ls $localdir `
 do
-	echo "python awsTranscodeHls.py -u $3 -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1"
+	echo "python awsTranscodeHls.py -u $3 -f folder -b $s3bucket -c $2 -i $bucksrc"/"$file -o $buckdst -t $1"
 	if [ "$txbtrancode" == "true" ]; then
-		python $txbtool"/"awsTranscodeHls.py -u $3 -f folder -b $s3bucket -i $bucksrc"/"$file -o $buckdst -t $1
+		python $txbtool"/"awsTranscodeHls.py -u $3 -f folder -b $s3bucket -c $2 -i $bucksrc"/"$file -o $buckdst -t $1
 	fi
 
 	echo "bypy rm $file"
