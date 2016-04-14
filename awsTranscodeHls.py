@@ -68,7 +68,7 @@ segment_duration = '6'
 # thumbnail_pattern = 'thumbnail{count}'
 # HLS Presets that will be used to create an adaptive bitrate playlist.
 
-hls_0800k_mypreset_id     = '1460467985190-1cxhbu';
+hls_0800k_mypreset_id     = '1460610438702-plue8g';
 hls_1600k_mypreset_id     = '1460468139207-wxacbb';
 hls_2500k_mypreset_id     = '1460468427582-73dwrb';
 hls_4000k_mypreset_id     = '1460605160645-eeynb5';
