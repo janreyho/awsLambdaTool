@@ -5,7 +5,8 @@ import hashlib
 import json
 import sys
 import getopt
-# import os
+import os
+import commands
 
 import boto.elastictranscoder
 from boto.s3.connection import S3Connection
@@ -58,17 +59,16 @@ print "time:" +time
 
 pipeline_id = '1451458179766-qniixd'
 region = 'ap-northeast-1'
-segment_duration = '2'
+segment_duration = '6'
 #All outputs will have this prefix prepended to their output key.
 # input_key_prefix = 'zhongguolan/videos/src/'
 # thumbnail_pattern = 'thumbnail{count}'
 # HLS Presets that will be used to create an adaptive bitrate playlist.
 
-hls_0400k_preset_id     = '1351620000001-200050';
-hls_0800k_mypreset_id     = '1451888005236-hdphcq';
-hls_1600k_mypreset_id     = '1451887928494-u9vd2j';
-hls_2500k_mypreset_id     = '1451887780433-08sxuj';
-hls_4001k_mypreset_id     = '1453104062613-gblgt0';
+hls_0800k_mypreset_id     = '1460467985190-1cxhbu';
+hls_1600k_mypreset_id     = '1460468139207-wxacbb';
+hls_2500k_mypreset_id     = '1460468427582-73dwrb';
+hls_4000k_mypreset_id     = '1460605160645-eeynb5';
 # Creating client for accessing elastic transcoder
 transcoder_client = boto.elastictranscoder.connect_to_region(region)
 
@@ -76,7 +76,8 @@ transcoder_client = boto.elastictranscoder.connect_to_region(region)
 conn = S3Connection()
 bucket = conn.get_bucket(bucket)
 
-# sys.exit()
+file_object = open('resolution.txt', 'w')
+file_transcode = open('transcode.txt', 'w')
 for key in bucket.list(src,''):
     # print key.name
     num1=key.name.rfind('/',0,len(key.name))
@@ -111,21 +112,14 @@ for key in bucket.list(src,''):
     print '####transcode:' + output_key
     print keyoutpath
 
-    if "no" != TEST:
-        continue
-
     # Setup the job input using the provided input key.
     job_input = { 'Key': key.name }
 
-    hls_400k = {
-        'Key' : 'hls0400k/' + output_key,
-        'PresetId' : hls_0400k_preset_id,
-        'SegmentDuration' : segment_duration
-    }
     hls_0800k = {
         'Key' : 'hls0800k/' + output_key,
         'PresetId' : hls_0800k_mypreset_id,
         'SegmentDuration' : segment_duration,
+        'ThumbnailPattern' : '{count}'
     }
     hls_1600k = {
         'Key' : 'hls1600k/' + output_key,
@@ -137,14 +131,49 @@ for key in bucket.list(src,''):
         'PresetId' : hls_2500k_mypreset_id,
         'SegmentDuration' : segment_duration,
     }
-    hls_4001k = {
-        'Key' : 'hls4001k/' + output_key,
-        'PresetId' : hls_4001k_mypreset_id,
+    hls_4000k = {
+        'Key' : 'hls2500k/' + output_key,
+        'PresetId' : hls_4000k_mypreset_id,
         'SegmentDuration' : segment_duration,
-        'ThumbnailPattern' : '{count}'
     }
+    
 
-    job_outputs = [ hls_400k,hls_0800k, hls_1600k, hls_2500k, hls_4001k]
+    a,b = commands.getstatusoutput('ffprobe -v quiet -print_format json -show_format -show_streams /mnt/s3/' + key.name)
+    c = json.loads(b)
+    file_object.write(str(c['format']['bit_rate'])+'\t\t')
+    file_object.write(str(c['streams'][0]['coded_width'])+'*'+str(c['streams'][0]['coded_height'])+'\t\t')
+    file_object.write(key.name + '\n')
+
+    if 600 > c['streams'][0]['duration']:
+        thumbnailInterval = 5
+    elif 1800 > c['streams'][0]['duration']:
+        thumbnailInterval = 10
+    else:
+        thumbnailInterval = 30
+
+    if 480 == c['streams'][0]['coded_height']:
+        job_outputs = [ hls_0800k]
+    elif 720 == c['streams'][0]['coded_height']:
+        if 1200000 > int(c['format']['bit_rate']):
+            job_outputs = [ hls_0800k]
+        else:
+            job_outputs = [ hls_1600k,hls_0800k]
+    elif 1088 == c['streams'][0]['coded_height']:
+        if 1200000 > int(c['format']['bit_rate']):
+            job_outputs = [ hls_0800k]
+        elif 2000000 > int(c['format']['bit_rate']):
+            job_outputs = [ hls_1600k,hls_0800k]
+        elif 4000000 > int(c['format']['bit_rate']):
+            job_outputs = [ hls_2500k,hls_0800k,hls_1600k]
+        else:
+            job_outputs = [ hls_4000k,hls_2500k,hls_0800k,hls_1600k]
+    else:
+        file_object.write('ERROR:coded_height:' + key.name + '\n')
+
+    file_object.write(str(job_outputs)+ '\n')
+ 
+    if "no" != TEST:
+        continue
 
     # Setup master playlist which can be used to play using adaptive bitrate.
     playlist = {
@@ -165,5 +194,10 @@ for key in bucket.list(src,''):
     # print json.dumps(create_job_request)
 
     create_job_result=transcoder_client.create_job(**create_job_request)
-    print 'transcoded:' +output_key
-    print 'HLS job has been created: ', json.dumps(create_job_result['Job'], indent=4, sort_keys=True)
+
+    file_transcode.write('transcoded:' +output_key)
+    file_transcode.write(json.dumps(create_job_result['Job'], indent=4, sort_keys=True))
+    # print 'HLS job has been created: ', json.dumps(create_job_result['Job'], indent=4, sort_keys=True)
+
+file_object.close()
+file_transcode.close()
