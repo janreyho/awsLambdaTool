@@ -70,8 +70,8 @@ segment_duration = '6'
 
 hls_0800k_mypreset_id     = '1460467985190-1cxhbu';
 hls_1600k_mypreset_id     = '1460468139207-wxacbb';
-hls_atuo_mypreset_id     = '1460517949509-5owzfo';
-# hls_4001k_mypreset_id     = '1453104062613-gblgt0';
+hls_2500k_mypreset_id     = '1460468427582-73dwrb';
+hls_4000k_mypreset_id     = '1460605160645-eeynb5';
 # Creating client for accessing elastic transcoder
 transcoder_client = boto.elastictranscoder.connect_to_region(region)
 
@@ -122,21 +122,23 @@ for key in bucket.list(src,''):
         'Key' : 'hls0800k/' + output_key,
         'PresetId' : hls_0800k_mypreset_id,
         'SegmentDuration' : segment_duration,
+        'ThumbnailPattern' : '{count}'
     }
     hls_1600k = {
         'Key' : 'hls1600k/' + output_key,
         'PresetId' : hls_1600k_mypreset_id,
         'SegmentDuration' : segment_duration,
     }
-    hls_auto = {
-        'Key' : 'hls_auto/' + output_key,
-        'PresetId' : hls_atuo_mypreset_id,
+    hls_2500k = {
+        'Key' : 'hls2500k/' + output_key,
+        'PresetId' : hls_2500k_mypreset_id,
         'SegmentDuration' : segment_duration,
-        'ThumbnailPattern' : '{count}'
     }
-
-
-    # job_outputs = [ hls_400k,hls_0800k, hls_1600k, hls_2500k, hls_4001k]
+    hls_4000k = {
+        'Key' : 'hls2500k/' + output_key,
+        'PresetId' : hls_4000k_mypreset_id,
+        'SegmentDuration' : segment_duration,
+    }
     
 
     a,b = commands.getstatusoutput('ffprobe -v quiet -print_format json -show_format -show_streams /mnt/s3/' + key.name)
@@ -145,20 +147,29 @@ for key in bucket.list(src,''):
     file_object.write(str(c['streams'][0]['coded_width'])+'*'+str(c['streams'][0]['coded_height'])+'\t\t')
     file_object.write(key.name + '\n')
 
+    if 600 > c['streams'][0]['duration']:
+        thumbnailInterval = 5
+    elif 1800 > c['streams'][0]['duration']:
+        thumbnailInterval = 10
+    else:
+        thumbnailInterval = 30
+
     if 480 == c['streams'][0]['coded_height']:
-        job_outputs = [ hls_auto]
+        job_outputs = [ hls_0800k]
     elif 720 == c['streams'][0]['coded_height']:
         if 1200000 > int(c['format']['bit_rate']):
-            job_outputs = [ hls_auto]
+            job_outputs = [ hls_0800k]
         else:
-            job_outputs = [ hls_auto,hls_0800k]
+            job_outputs = [ hls_1600k,hls_0800k]
     elif 1088 == c['streams'][0]['coded_height']:
         if 1200000 > int(c['format']['bit_rate']):
-            job_outputs = [ hls_auto]
+            job_outputs = [ hls_0800k]
         elif 2000000 > int(c['format']['bit_rate']):
-            job_outputs = [ hls_auto,hls_0800k]
+            job_outputs = [ hls_1600k,hls_0800k]
+        elif 4000000 > int(c['format']['bit_rate']):
+            job_outputs = [ hls_2500k,hls_0800k,hls_1600k]
         else:
-            job_outputs = [ hls_auto,hls_0800k,hls_1600k]
+            job_outputs = [ hls_4000k,hls_2500k,hls_0800k,hls_1600k]
     else:
         file_object.write('ERROR:coded_height:' + key.name + '\n')
 
