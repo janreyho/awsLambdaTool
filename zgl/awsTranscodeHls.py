@@ -192,3 +192,4 @@ for key in bucket.list(src,''):
     # print 'HLS job has been created: ', json.dumps(create_job_result['Job'], indent=4, sort_keys=True)
 
 file_object.close()
+file_transcode.close()
