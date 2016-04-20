@@ -2,6 +2,7 @@
 
 #./download.sh http://xxx.com urltest /path
 #sudo ./downloadurl.sh http://img1.gochinatv.com urltest /mnt/s3/zhongguolan/videos/src
+#./downloadurl.sh http://vod.vegocdn.com chinablueURL1 /mnt/s3/zhongguolan/videos/src > download_zgl.log 2>&1 &
 
 url="null"
 linenum=0
