@@ -7,6 +7,7 @@ import sys
 import getopt
 import os
 import commands
+import signal
 
 import boto.elastictranscoder
 from boto.s3.connection import S3Connection
@@ -79,8 +80,18 @@ transcoder_client = boto.elastictranscoder.connect_to_region(region)
 conn = S3Connection()
 bucket = conn.get_bucket(bucket)
 
-file_object = open('/home/ubuntu/gochina/'+contProv+'/log/resolution.txt', 'w')
-file_transcode = open('/home/ubuntu/gochina/'+contProv+'/log/transcode.txt', 'w')
+file_object = open('/home/ubuntu/gochina/'+contProv+'/log/resolution_'+time+'.txt', 'w')
+file_transcode = open('/home/ubuntu/gochina/'+contProv+'/log/transcode_'+time+'.txt', 'w')
+
+def onSIGINT(a,b):
+    print 'recv SIGINT'
+    file_object.close()
+    file_transcode.close()
+    os._exit()
+    # sys.exit()
+
+signal.signal(signal.SIGINT,onSIGINT)
+
 for key in bucket.list(src,''):
     # print key.name
     num1=key.name.rfind('/',0,len(key.name))
@@ -139,7 +150,7 @@ for key in bucket.list(src,''):
         'PresetId' : hls_4000k_mypreset_id,
         'SegmentDuration' : segment_duration,
     }
-    
+
 
     a,b = commands.getstatusoutput('ffprobe -v quiet -print_format json -show_format -show_streams /mnt/s3/' + key.name)
     c = json.loads(b)
@@ -174,7 +185,7 @@ for key in bucket.list(src,''):
         file_object.write('ERROR:coded_height:' + key.name + '\n')
 
     file_object.write(str(job_outputs)+ '\n')
- 
+
     if "no" != TEST:
         continue
 
