@@ -20,10 +20,12 @@ txbremoterm=true
 txblocalmv=true
 
 
-txbmapsrc[0]="yitiao"
-txbmapdst[0]="yitiao"
-txbmapsrc[1]="private"
-txbmapdst[1]="private"
+txbmapsrc[0]="cp"
+txbmapdst[0]="cp"
+txbmapsrc[1]="ad"
+txbmapdst[1]="ad"
+txbmapsrc[2]="clips"
+txbmapdst[2]="clips"
 
 videodstformat=mp4
 mailrecvers=hejiayi@gochinatv.com,lisi@gochinatv.com,zhangyue@gochinatv.com,xiexirui@gochinatv.com,fengzhiwen@gochinatv.com,panxinming@gochinatv.com
