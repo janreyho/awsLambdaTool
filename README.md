@@ -4,7 +4,7 @@
 
 	//北京时间24:00:00，任务开始执行
 	crontab －e
-	0 16 * * * ~/gochina/gochina/startjob.sh no
+	0 16 * * * /gochina/gochina/startjob.sh no
 
 ### 目录cpconfig中，一个配置文件对应一个CP
 

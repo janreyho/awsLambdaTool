@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/gochina/gochina/cpconfig/$2
+source /gochina/gochina/cpconfig/$2
 
 echo "First Method: ${txbmapsrc[*]}"
 echo "Second Method: ${txbmapdst[@]}"
@@ -73,7 +73,12 @@ function fun(){
                           mv $txbtool/var1.json $txbtool/$2.json
                           jq --arg var $buckdst/$file2/$id"_"$3/$id".jpg" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].pagepic=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json
-                          jq --arg var $buckdst/$file2/$id"_"$3/$id".m3u8" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].dst=$var' $txbtool/$2.json > $txbtool/var1.json
+                          if [[ "mp4" == $videodstformat ]]; then
+                            jq --arg var $buckdst/$file2/$id"_"$3/$id".mp4" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].dst=$var' $txbtool/$2.json > $txbtool/var1.json
+                          fi
+                          if [[ "m3u8" == $videodstformat ]]; then
+                            jq --arg var $buckdst/$file2/$id"_"$3/$id".m3u8" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].dst=$var' $txbtool/$2.json > $txbtool/var1.json
+                          fi
                           mv $txbtool/var1.json $txbtool/$2.json
                           jq --arg var $buckdst/$file2/$id"_"$3"/00001.jpg" --arg num1 $pos1 --arg num2 $pos2 '.albums[$num1 | tonumber].videos[$num2 | tonumber].thumbnails=$var' $txbtool/$2.json > $txbtool/var1.json
                           mv $txbtool/var1.json $txbtool/$2.json

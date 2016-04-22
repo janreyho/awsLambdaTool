@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/gochina/gochina/cpconfig/$2
+source /gochina/gochina/cpconfig/$2
 echo ""
 echo ""
 echo "#############"$2
@@ -35,11 +35,13 @@ tree $localdir >> $logpath"/"treelogfile
 cat $txbtool/$2.json >> $logpath"/"treelogfile
 if [ "no" = $1 ];then
 	echo sendemail2
-	/usr/bin/mail -s $2'_'$3'更新tree' hejiayi@gochinatv.com,zhixueyong@gochinatv.com,caolei@gochinatv.com < $logpath"/"treelogfile
-	curl -F stream=@$txbtool/$2.json 'http://vrsclone.herokuapp.com/api/v1/episodes/incoming.json'
-	mv $txbtool/$2.json $txbtool/data/$2"_"$3.json
+	/usr/bin/mail -s $2'_'$3'更新tree' $mailrecvers < $logpath"/"treelogfile
+	if [ "tuxiaobei" = $2 ];then
+		curl -F stream=@$txbtool/$2.json 'http://vrsclone.herokuapp.com/api/v1/episodes/incoming.json'
+	fi
+	mv $txbtool/$2.json $datapath/data/$2"_"$3.json
 else
-	/usr/bin/mail -s $2'_'$3'更新tree' hejiayi@gochinatv.com < $logpath"/"treelogfile
+	/usr/bin/mail -s $2'_'$3'更新tree' $mailrecverstest < $logpath"/"treelogfile
 fi
 
 echo "cp -rf $localdir"/"* $s3dir"
@@ -50,9 +52,11 @@ fi
 
 for file in ` ls $localdir `
 do
-	echo "python awsTranscodeHls.py -u $3 -f folder -b $s3bucket -c $2 -i $bucksrc"/"$file -o $buckdst -t $1"
+	echo "python awsTranscode.py -u $3 -f folder -b $s3bucket -c $2 -s $bucksrc"/"$file -d $buckdst -t $1"
 	if [ "$txbtrancode" == "true" ]; then
-		python $txbtool"/"awsTranscodeHls.py -u $3 -f folder -b $s3bucket -c $2 -i $bucksrc"/"$file -o $buckdst -t $1
+		python $txbtool"/"awsTranscode.py -u $3 -f folder -b $s3bucket -c $2 -s $bucksrc"/"$file -d $buckdst -t $1
+		cat /gochina/$2/log/resolution_$3.txt
+		cat /gochina/$2/log/transcode_$3.txt
 	fi
 
 	echo "bypy rm $file"
