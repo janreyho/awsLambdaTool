@@ -39,7 +39,7 @@ if [ "no" = $1 ];then
 	if [ "tuxiaobei" = $2 ];then
 		curl -F stream=@$txbtool/$2.json 'http://vrsclone.herokuapp.com/api/v1/episodes/incoming.json'
 	fi
-	mv $txbtool/$2.json $datapath/data/$2"_"$3.json
+	mv $txbtool/$2.json $datapath/$2"_"$3.json
 else
 	/usr/bin/mail -s $2'_'$3'更新tree' $mailrecverstest < $logpath"/"treelogfile
 fi
