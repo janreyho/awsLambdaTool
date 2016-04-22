@@ -12,7 +12,7 @@ echo $bucksrc
 echo $buckdst
 
 
-echo "bypy syndown /$2 $localdir"
+echo "bypy syncdown /$2 $localdir"
 if [ "$txbdown" == "true" ]; then
 	/usr/local/bin/bypy -r 1000000 syncdown /$2 $localdir
 fi
