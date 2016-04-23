@@ -1,0 +1,22 @@
+{
+  "name": "gochina",
+  "version": "1.0.0",
+  "description": "### 定时任务",
+  "main": "download_directly_to_s3.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://git.vego.tv/gitbucket/git/HTML5/gochina.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "^1.2.0",
+    "node-youtube-resumable-upload": "^0.2.1",
+    "request": "^2.72.0",
+    "sqs-consumer": "^3.1.2",
+    "streaming-s3": "^0.4.1"
+  }
+}
