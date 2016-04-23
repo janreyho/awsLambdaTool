@@ -3,7 +3,6 @@
 import sys
 import hashlib
 import json
-import sys
 import getopt
 import os
 import commands
@@ -91,11 +90,18 @@ def ffprobeJson(para,key):
     a,b = commands.getstatusoutput('/usr/local/bin/ffprobe -v quiet -print_format json -show_format -show_streams /mnt/s3/' + key.name)
     c = json.loads(b)
     file_object.write(str(c['format']['bit_rate'])+'\t\t')
-    file_object.write(str(c['streams'][0]['coded_width'])+'*'+str(c['streams'][0]['coded_height'])+'\t\t')
+
+    ipos = 0
+    while (ipos < len(c['streams'])):
+        if c['streams'][ipos].has_key('coded_width'):
+            break;
+        ipos += 1
+    file_object.write(str(c['streams'][ipos]['coded_width'])+'*'+str(c['streams'][ipos]['coded_height'])+'\t\t')
     file_object.write(str(c['format']['size'])+'\t\t')
     file_object.write(str(c['format']['duration'])+'\t\t')
     file_object.write(key.name + '\n')
     para['ffprobe'] = c
+    para['vstream_index'] = ipos
 
 def produceHLS(para,key):
     hls_0800k_mypreset_id     = '1461232174018-5qze1a';
@@ -127,26 +133,29 @@ def produceHLS(para,key):
         'SegmentDuration' : segment_duration,
     }
 
-    if 600 > para['ffprobe']['streams'][0]['duration']:
+    duration = para['ffprobe']['streams'][0]['duration']
+    coded_height = para['ffprobe']['streams'][para['vstream_index']]['coded_height']
+    bit_rate = int(para['ffprobe']['format']['bit_rate'])
+    if 600 > duration:
         thumbnailInterval = 5
-    elif 1800 > para['ffprobe']['streams'][0]['duration']:
+    elif 1800 > duration:
         thumbnailInterval = 10
     else:
         thumbnailInterval = 30
 
-    if 480 == para['ffprobe']['streams'][0]['coded_height']:
+    if 480 == coded_height:
         job_outputs = [ hls_0800k]
-    elif 720 == para['ffprobe']['streams'][0]['coded_height']:
-        if 1200000 > int(para['ffprobe']['format']['bit_rate']):
+    elif 720 == coded_height:
+        if 1200000 > bit_rate:
             job_outputs = [ hls_0800k]
         else:
             job_outputs = [ hls_0800k,hls_1600k]
-    elif 1088 == para['ffprobe']['streams'][0]['coded_height']:
-        if 1200000 > int(para['ffprobe']['format']['bit_rate']):
+    elif 1088 == coded_height:
+        if 1200000 > ibit_rate:
             job_outputs = [ hls_0800k]
-        elif 2000000 > int(para['ffprobe']['format']['bit_rate']):
+        elif 2000000 > bit_rate:
             job_outputs = [ hls_0800k,hls_1600k]
-        elif 4000000 > int(para['ffprobe']['format']['bit_rate']):
+        elif 4000000 > ibit_rate:
             job_outputs = [ hls_0800k,hls_1600k,hls_2500k]
         else:
             job_outputs = [ hls_0800k,hls_1600k,hls_2500k,hls_4000k]
@@ -187,13 +196,15 @@ def produceMP4(para,key):
         'PresetId' : mp4_4000k_mypreset_id,
     }
 
-    if 720 == para['ffprobe']['streams'][0]['coded_height']:
-        if 2000000 > int(para['ffprobe']['format']['bit_rate']):
+    coded_height = para['ffprobe']['streams'][para['vstream_index']]['coded_height']
+    bit_rate = int(para['ffprobe']['format']['bit_rate'])
+    if 720 == coded_height:
+        if 2000000 > bit_rate:
             file_object.write('ERROR:720p bitrate<2M:' + key.name + '\n')
         else:
             job_outputs = [ hls_2000k]
-    elif 1088 == para['ffprobe']['streams'][0]['coded_height']:
-        if 4000000 > int(para['ffprobe']['format']['bit_rate']):
+    elif 1088 == coded_height:
+        if 4000000 > bit_rate:
             file_object.write('ERROR:1080p bitrate<4M:' + key.name + '\n')
         else:
             job_outputs = [ hls_4000k]
