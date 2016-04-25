@@ -10,6 +10,13 @@ import signal
 import boto.elastictranscoder
 from boto.s3.connection import S3Connection
 # python awsTranscode.py -u 20160413000001 -b ottcloud -c publicspace -f folder -i zhongguolan/videos/src -o publicspace/videos/dst -t test > work.log 2>&1 &
+# u：时间戳
+# b：aws桶
+# c：cp
+# f：folder/file     folder：针对整个folder转码     file转码单个文件
+# i：源
+# d：目的
+# t：test/no         test：转码测试，不生成文件       no：直接转码
 
 def usage():
   print "use:python *.py -u time -b bucket -c cp -f (file|folder) -s src -d dst -t test"
