@@ -1,3 +1,4 @@
+source /gochina/gochina/cpconfig/$2
 var=` TZ='Asia/Shanghai' date +%Y%m%d%H%M%S `
 echo $var
 
