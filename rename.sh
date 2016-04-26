@@ -86,10 +86,10 @@ function fun(){
 
                           if [ -f $1/$file1/$file2/$id".png" ]; then
                             echo " cp -rf $1/$file1/$file2/$id".png" $s3dir2/$file2/$id"_"$3/$id".png" "
-                            convert -quality 60 $1/$file1/$file2/$id".png" $1/$file1/$file2/$id".jpg"
+                            # convert -quality 60 $1/$file1/$file2/$id".png" $1/$file1/$file2/$id".jpg"
                             if [ "no" = $4 ];then
                             mkdir $s3dir2/$file2/$id"_"$3
-                            cp -rf $1/$file1/$file2/$id".jpg" $s3dir2/$file2/$id"_"$3/$id".jpg"
+                            cp -rf $1/$file1/$file2/$id".png" $s3dir2/$file2/$id"_"$3/$id".png"
                             fi
                           fi
                           pos2=`expr $pos2 + 1`
