@@ -21,7 +21,7 @@
 	}
 
 
-## 发送转码请求
+## 示例 发送转码请求
 	curl --header "Content-Type:application/json" \
 	     --request POST \
 	     --data '{"bucket":"ottcloud","contentprovider":"publicspace","dst":"publicspace/videos/dst/test/","src":"publicspace/videos/src/2016.04.20/","testflag":"no","time":"20160426000001","type":"mp4","v_bitrate":2700000,"v_height":720}' \
@@ -53,7 +53,8 @@
 	  ]
 	}
 
-## 使用方法
+## 开发方法
+服务使用这不用看
 Python-lambda is a toolset for developing and deploying serverless Python code in AWS Lambda.
 
 Begin by creating a new virtualenv and project folder.
@@ -68,8 +69,8 @@ This will create the following files: event.json, __init__.py, service.py, and c
 
 	(pylambda) $ lambda invoke -v		//本地测试
 	(pylambda) $ lambda deploy			//部署到awsLambda
-	
-	
+
+
 ## 备注
 
 [python-lambda](https://github.com/nficano/python-lambda)
