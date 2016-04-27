@@ -54,7 +54,7 @@
 	}
 
 ## 开发方法
-服务使用这不用看
+仅使用转码服务，下面内容无需看
 Python-lambda is a toolset for developing and deploying serverless Python code in AWS Lambda.
 
 Begin by creating a new virtualenv and project folder.
