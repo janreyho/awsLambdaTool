@@ -27,7 +27,31 @@
 	     --data '{"bucket":"ottcloud","contentprovider":"publicspace","dst":"publicspace/videos/dst/test/","src":"publicspace/videos/src/2016.04.20/","testflag":"no","time":"20160426000001","type":"mp4","v_bitrate":2700000,"v_height":720}' \
 	     https://0lklpdp0h9.execute-api.ap-northeast-1.amazonaws.com/prod/videoTranscode
 
+## 返回数据格式
 
+	{
+	  "videos": [
+	    {
+	      "dst": "publicspace/videos/dst/clips/2015_20160426000001/2015.m3u8",
+	      "error": "no",
+	      "keyoutpath": "publicspace/videos/dst/clips/",
+	      "output_key": "2015",
+	      "src": "publicspace/videos/src/2016.04.20/clips/2015.mp4",
+	      "status": "transcode"
+	    },
+	    {
+	      "dst": "publicspace/videos/dst/cp/1_20160426000001/1.m3u8",
+	      "error": "no",
+	      "keyoutpath": "publicspace/videos/dst/cp/",
+	      "output_key": "1",
+	      "src": "publicspace/videos/src/2016.04.20/cp/1.mp4",
+	      "status": "transcode"
+	    },
+	    {
+	      "error": "not .mp4"
+	    }
+	  ]
+	}
 
 ## 使用方法
 Python-lambda is a toolset for developing and deploying serverless Python code in AWS Lambda.
