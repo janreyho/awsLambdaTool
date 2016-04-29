@@ -39,7 +39,7 @@ function fun(){
                         done
 
                         cd $1/$file1/$file2
-                        rename 's/(\d+)(?:.*)(\.[^.]+)$/$1$2/' *
+                        rename 's/^(\d+)(?:.*)(\.[^.]+)$/$1$2/' *
                         #cd -
 
                         for ((i=0; i<${#txbmapsrc[@]}; i++))
