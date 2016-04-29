@@ -34,13 +34,14 @@ tree $localdir >> $logpath"/"treelogfile
 
 cat $txbtool/$2.json >> $logpath"/"treelogfile
 if [ "no" = $1 ];then
-	echo sendemail2
+	echo "/usr/bin/mail -s $2'_'$3'更新tree' $mailrecvers < $logpath"/"treelogfile"
 	/usr/bin/mail -s $2'_'$3'更新tree' $mailrecvers < $logpath"/"treelogfile
 	if [ "tuxiaobei" = $2 ];then
 		curl -F stream=@$txbtool/$2.json 'http://vrsclone.herokuapp.com/api/v1/episodes/incoming.json'
 	fi
 	mv $txbtool/$2.json $datapath/$2"_"$3.json
 else
+	echo "/usr/bin/mail -s $2'_'$3'更新tree' $mailrecverstest < $logpath"/"treelogfile"
 	/usr/bin/mail -s $2'_'$3'更新tree' $mailrecverstest < $logpath"/"treelogfile
 fi
 
