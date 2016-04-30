@@ -109,7 +109,7 @@ def produceHLS(event,job,video,key):
             job_outputs = [ hls_0800k]
         else:
             job_outputs = [ hls_0800k,hls_1600k]
-    elif 1088 == event.get('v_height'):
+    elif 1080 == event.get('v_height'):
         if 1200000 > event.get('v_bitrate'):
             job_outputs = [ hls_0800k]
         elif 2000000 > event.get('v_bitrate'):
