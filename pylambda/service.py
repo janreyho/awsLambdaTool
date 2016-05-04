@@ -2,13 +2,13 @@
 import boto.elastictranscoder
 from boto.s3.connection import S3Connection
 import json
-# import os
-# import commands
+import boto.ses
 
 pipeline_id = '1451458179766-qniixd'
 region = 'ap-northeast-1'
-conn = S3Connection()
+s3conn = S3Connection()
 transcoder_client = boto.elastictranscoder.connect_to_region(region)
+logstr = ''
 
 class NoError(Exception):
     def __init__(self, value):
@@ -22,7 +22,18 @@ class MyError(Exception):
     def __str__(self):
         return repr(self.value)
 
+def sendemail(subject,data):
+    sesconn = boto.ses.connect_to_region('us-west-2')
+
+    email_from = 'janreyho@gmail.com'
+    email_to = ['hejiayi@gochinatv.com','zhixueyong@gochinatv.com']
+
+    response = sesconn.send_email(email_from,subject,data,email_to)
+
+    print response
+
 def procKeyName(event,bucket,video,key):
+    global logstr
     if key.name.endswith('/'):
         raise NoError("abc")
     if key.name.endswith('.png'):
@@ -51,7 +62,7 @@ def procKeyName(event,bucket,video,key):
         raise MyError( "not mp4 or m3u8 ")
 
     video['dst'] = findkey
-    print "  :"+findkey
+    logstr += findkey+'\n'
     if bucket.get_key(findkey):
         video['status'] = "exist"
         raise MyError("exist")
@@ -180,7 +191,7 @@ def handler(event, context):
     out = {}
     out['videos'] = []
 
-    bucket = conn.get_bucket(event.get('bucket'))
+    bucket = s3conn.get_bucket(event.get('bucket'))
     print 'hejiayi1'
 
     for key in bucket.list(event.get('src'),''):
@@ -210,5 +221,6 @@ def handler(event, context):
         else:
             out['videos'].append(video)
 
-
-    return json.dumps(out)
+    data = json.dumps(out)
+    sendemail('lambdaTranscoder',logstr+data)
+    return data

@@ -3,7 +3,7 @@
   "contentprovider": "publicspace",
   "dst": "publicspace/videos/dst/test/",
   "src": "publicspace/videos/src/2016.04.20/",
-  "testflag": "no",
+  "testflag": "test",
   "time": "20160426000001",
   "type": "mp4",
   "v_bitrate": 2700000,
