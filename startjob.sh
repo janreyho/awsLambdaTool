@@ -2,9 +2,9 @@ var=` TZ='Asia/Shanghai' date +%Y%m%d%H%M%S `
 echo $var
 
 for file in ` ls /gochina/gochina/cpconfig `
-source /gochina/gochina/cpconfig/$2
 do
 {
+	source /gochina/gochina/cpconfig/$file
 	ps -fe | grep "/gochina/gochina/gochinajob.sh $1 $file" | grep -v grep
 	if [ $? -ne 0 ]; then
 		# if [ "no" = $1 ];then
