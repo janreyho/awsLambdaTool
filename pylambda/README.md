@@ -19,7 +19,14 @@
 	  "v_bitrate": 2700000,			//源文件码率，单位bps
 	  "v_height": 720				//源文件分辨率，480，720，或1080
 	}
-说明：src和dst必须是bucket中的目录，且必须是同一个bucket
+	说明：
+	1、src和dst必须是bucket中的目录，且必须是同一个bucket
+	2、仅对后缀名为'.mp4','.mkv'进行转码，对'.png','.jpg','.m3u8','.txt'直接忽略，其他类型报错。
+	3、如果src为目录：则转码后对视频目录保持src的目录结构。如：
+	src＝tuxiaobei/videos/src/2016.04.29/
+	原视频path＝tuxiaobei/videos/src/2016.04.29/song/380.mp4
+	dst=tuxiaobei/videos/dst
+	则转码后视频path＝"tuxiaobei/videos/dst/song/380_20160430000001/380.m3u8
 
 <font color=red>注意：请求数据src字段，需慎重检查，一定是自己的最长目录，如果不小心用成最短目录，可能把整个s3库里文件全部转码，几十万美元就一下没有啦（账号绑定信用卡）。</font>
 
