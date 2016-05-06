@@ -9,6 +9,8 @@ region = 'ap-northeast-1'
 s3conn = S3Connection()
 transcoder_client = boto.elastictranscoder.connect_to_region(region)
 logstr = ''
+srcNotVideoType = ['.png','.jpg','.m3u8','.txt']
+srcVideoType = ['.mp4','.mkv']
 
 class NoError(Exception):
     def __init__(self, value):
@@ -36,10 +38,16 @@ def procKeyName(event,bucket,video,key):
     global logstr
     if key.name.endswith('/'):
         raise NoError("abc")
-    if key.name.endswith('.png'):
-        raise NoError(".png")
-    if not key.name.endswith('.mp4'):
-        raise MyError("not .mp4")
+    for type in srcNotVideoType:
+        if key.name.endswith(type):
+            raise NoError(type)
+    pos = 0
+    for type in srcVideoType:
+        pos += 1
+        if key.name.endswith(type):
+            break
+        elif len(srcVideoType) == pos:
+            raise MyError("not "+str(srcVideoType))
 
     num1=key.name.rfind('/',0,len(key.name))
     num2=key.name.rfind('.',0,len(key.name))
