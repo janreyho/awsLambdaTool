@@ -60,7 +60,11 @@ function notify_to_boss(url, stats){
     host: 'vrsclone.herokuapp.com',
     path: '/api/v1/episodes/download.json',
     method: 'POST',
-    headers: {'X-REQUESTER': 'BOSS-DOWNLOAD'}
+    headers: {
+      'X-REQUESTER': 'BOSS-DOWNLOAD',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(post_data)
+    }
   }, function(res) {
     res.setEncoding('utf8');
   });
