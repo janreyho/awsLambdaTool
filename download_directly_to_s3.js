@@ -25,7 +25,7 @@ function upload(url, out) {
       concurrentParts: 2,
       waitTime: 10000,
       retries: 1,
-      maxPartSize: 10*1024*1024,
+      maxPartSize: 5000*1024*1024,
     }
   );
 
