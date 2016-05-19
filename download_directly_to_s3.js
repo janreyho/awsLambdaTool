@@ -8,6 +8,8 @@ var streamingS3 = require('streaming-s3');
 var request = require('request');
 var Consumer = require('sqs-consumer');
 var argv = require('minimist')(process.argv.slice(2));
+var http = require('http');
+var querystring = require('querystring');
 
 function upload(url, out) {
   var bucket = 'ottcloud-video'
@@ -38,6 +40,7 @@ function upload(url, out) {
   // All parts uploaded, but upload not yet acknowledged.
   uploader.on('uploaded', function (stats) {
     console.log('Upload stats: ', stats);
+    notify_to_boss(url, stats);
   });
 
   uploader.on('finished', function (resp, stats) {
@@ -49,6 +52,22 @@ function upload(url, out) {
   });
 
   uploader.begin(); // important if callback not provided.
+}
+
+function notify_to_boss(url, stats){
+  var post_data = querystring.stringify({'url' : url, 'state' : stats });
+  var req = http.request({
+    // host: 'https://vrsclone.herokuapp.com',
+    // path: '/api/v1/episodes/download.json',
+    host: 'http://requestb.in',
+    path: '/10hkcll1',
+    method: 'POST',
+    headers: {'X-REQUESTER': 'BOSS-DOWNLOAD'}
+  }, function(res) {
+    res.setEncoding('utf8');
+  });
+  req.write(post_data);
+  req.end();
 }
 
 function run_queue_server() {
