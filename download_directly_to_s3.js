@@ -22,8 +22,8 @@ function upload(url, out) {
       //ContentType: 'text/html'
     },
     {
-      concurrentParts: 2,
-      waitTime: 10000,
+      concurrentParts: 5,
+      waitTime: 20000,
       retries: 1,
       maxPartSize: 5000*1024*1024,
     }
@@ -40,11 +40,11 @@ function upload(url, out) {
   // All parts uploaded, but upload not yet acknowledged.
   uploader.on('uploaded', function (stats) {
     console.log('Upload stats: ', stats);
-    notify_to_boss(url, stats);
   });
 
   uploader.on('finished', function (resp, stats) {
     console.log('Upload finished: ', resp);
+    notify_to_boss(resp.Location, stats);
   });
 
   uploader.on('error', function (e) {
@@ -103,8 +103,12 @@ if (require.main === module) {
     run_queue_server();
   } else {
     console.log("running example");
-    var url = "http://v3.cztv.com/cztv/vod/2016/04/18/A9A647BB7C464761A0C759EF8E826E50/h264_1500k_mp4.mp4";
-    var out = "zgl/test.mp4";
-    upload(url, out);
+    var url = "https://s3.amazonaws.com/ottcloud-video/zgl/rm.zip";
+    var out = "zgl/rm-1.zip";
+    try {
+      upload(url, out);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
