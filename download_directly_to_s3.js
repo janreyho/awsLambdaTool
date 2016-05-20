@@ -10,10 +10,10 @@ var Consumer = require('sqs-consumer');
 var argv = require('minimist')(process.argv.slice(2));
 var http = require('http');
 var querystring = require('querystring');
-var airbrake = require('airbrake').createClient("117109", "3d3cc8749439b5878038d22d079ce0bf");
+// var airbrake = require('airbrake').createClient("117109", "3d3cc8749439b5878038d22d079ce0bf");
 
 function upload(url, out) {
-  var bucket = 'ottcloud'
+  var bucket = 'ottcloud';
 
   var rStream = request.get(url);
   var uploader = new streamingS3(rStream, {accessKeyId: process.env.AWS_ACCESS_KEY_ID, secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY},
@@ -112,7 +112,7 @@ if (require.main === module) {
       upload(url, out);
     } catch (e) {
       console.log(e);
-      airbrake.notify(e);
+      // airbrake.notify(e);
     }
   }
 }
