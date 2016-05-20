@@ -59,7 +59,7 @@ function notify_to_boss(url, stats){
   var post_data = querystring.stringify({'url' : url, 'state' : stats });
   var req = http.request({
     host: 'vrsclone.herokuapp.com',
-    path: '/api/v1/episodes/download.json',
+    path: '/api/v1/episodes/transfer.json',
     method: 'POST',
     headers: {
       'X-REQUESTER': 'BOSS-DOWNLOAD',
