@@ -157,7 +157,7 @@ def produceHLS(para,key):
             job_outputs = [ hls_0800k]
         else:
             job_outputs = [ hls_0800k,hls_1600k]
-    elif 1088 == coded_height:
+    elif 1088 == coded_height or 1080 == coded_height:
         if 1200000 > bit_rate:
             job_outputs = [ hls_0800k]
         elif 2000000 > bit_rate:
@@ -214,7 +214,7 @@ def produceMP4(para,key):
             return 1
         else:
             job_outputs = [ hls_2000k]
-    elif 1088 == coded_height:
+    elif 1088 == coded_height or 1080 == coded_height:
         if 4000000 > bit_rate:
             file_object.write('ERROR:1080p bitrate<4M:' + key.name + '\n')
             print 'ERROR:1080p bitrate<4M:'
