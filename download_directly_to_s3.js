@@ -8,9 +8,12 @@ var streamingS3 = require('streaming-s3');
 var request = require('request');
 var Consumer = require('sqs-consumer');
 var argv = require('minimist')(process.argv.slice(2));
+var http = require('http');
+var querystring = require('querystring');
+// var airbrake = require('airbrake').createClient("117109", "3d3cc8749439b5878038d22d079ce0bf");
 
 function upload(url, out) {
-  var bucket = 'ottcloud-video'
+  var bucket = 'ottcloud';
 
   var rStream = request.get(url);
   var uploader = new streamingS3(rStream, {accessKeyId: process.env.AWS_ACCESS_KEY_ID, secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY},
@@ -20,10 +23,10 @@ function upload(url, out) {
       //ContentType: 'text/html'
     },
     {
-      concurrentParts: 2,
-      waitTime: 10000,
+      concurrentParts: 3,
+      waitTime: 20000,
       retries: 1,
-      maxPartSize: 10*1024*1024,
+      maxPartSize: 5000*1024*1024,
     }
   );
 
@@ -42,6 +45,7 @@ function upload(url, out) {
 
   uploader.on('finished', function (resp, stats) {
     console.log('Upload finished: ', resp);
+    notify_to_boss(resp.Location, stats);
   });
 
   uploader.on('error', function (e) {
@@ -49,6 +53,24 @@ function upload(url, out) {
   });
 
   uploader.begin(); // important if callback not provided.
+}
+
+function notify_to_boss(url, stats){
+  var post_data = querystring.stringify({'url' : url, 'state' : stats });
+  var req = http.request({
+    host: 'vrsclone.herokuapp.com',
+    path: '/api/v1/episodes/transfer.json',
+    method: 'POST',
+    headers: {
+      'X-REQUESTER': 'BOSS-DOWNLOAD',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(post_data)
+    }
+  }, function(res) {
+    res.setEncoding('utf8');
+  });
+  req.write(post_data);
+  req.end();
 }
 
 function run_queue_server() {
@@ -84,8 +106,13 @@ if (require.main === module) {
     run_queue_server();
   } else {
     console.log("running example");
-    var url = "http://v3.cztv.com/cztv/vod/2016/04/18/A9A647BB7C464761A0C759EF8E826E50/h264_1500k_mp4.mp4";
-    var out = "zgl/test.mp4";
-    upload(url, out);
+    var url = "https://s3.amazonaws.com/ottcloud-video/zgl/rm.zip";
+    var out = "zgl/rm-1.zip";
+    try {
+      upload(url, out);
+    } catch (e) {
+      console.log(e);
+      // airbrake.notify(e);
+    }
   }
 }
