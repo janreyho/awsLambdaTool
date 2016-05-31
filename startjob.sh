@@ -17,8 +17,8 @@ do
 		# else
 		# 	/gochina/gochina/gochinajob.sh $1 $file $var
 		# fi
-	else
-		echo "/gochina/gochina/gochinajob.sh $1 $file exist" >> /gochina/$file/log/$var
+	# else
+	# 	echo "/gochina/gochina/gochinajob.sh $1 $file exist" >> /gochina/$file/log/$var
 	fi
 } &
 done
