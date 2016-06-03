@@ -193,16 +193,18 @@ def produceHLS(para,key):
     para['create_job_request'] = create_job_request
 
 def produceMP4(para,key):
-    mp4_2000k_mypreset_id     = '1461232916166-ssar47';
-    mp4_4000k_mypreset_id     = '1461232828658-w31bg8';
+    mp4_2000k_mypreset_id     = '1464925746545-si1ukb';
+    mp4_4000k_mypreset_id     = '1464925672021-qepmxz';
 
     hls_2000k = {
         'Key' : para['output_key']+".mp4",
         'PresetId' : mp4_2000k_mypreset_id,
+        'ThumbnailPattern' : '{count}'
     }
     hls_4000k = {
         'Key' : para['output_key']+".mp4",
         'PresetId' : mp4_4000k_mypreset_id,
+        'ThumbnailPattern' : '{count}'
     }
 
     coded_height = para['ffprobe']['streams'][para['vstream_index']]['coded_height']
