@@ -25,7 +25,7 @@ fi
 
 
 treelogfile=tree_`TZ='Asia/Shanghai' date +%Y-%m-%d`.log
-tree $localdir > $logpath"/"treelogfile
+tree -h $localdir > $logpath"/"treelogfile
 echo "rename.sh $localdir"
 if [ "$txbrename" == "true" ]; then
 	$txbtool"/"rename.sh $localdir $2 $3 $1
