@@ -35,6 +35,7 @@ function fun(){
 			sudo mkdir $2/$file1
 			sudo find $1/$file1 -not -name delivery.complete -type f -exec mv {} $2/$file1/ \;
 			sudo mv $1/$file1/delivery.complete $2/$file1
+			touch /home/yangshiwuxi/log/delivery.complete
 		fi
 	done
 }
