@@ -22,18 +22,19 @@ function fun(){
 	do
 		echo $file1
 
-		filetime=`stat -c %Y $1/$file1`
-		now=`date +%s`
+		# filetime=`stat -c %Y $1/$file1`
+		# now=`date +%s`
 
-		if [ ! -f $3 ];then
-			sudo touch /home/yangshiwuxi/log/$3
-			sudo chmod 777 /home/yangshiwuxi/log/$3
-		fi
+		# if [ ! -f $3 ];then
+		# 	sudo touch /home/yangshiwuxi/log/$3
+		# 	sudo chmod 777 /home/yangshiwuxi/log/$3
+		# fi
 
-		if [ $[ $now - $filetime ] -gt 60 ];then
+		if [ -f $1/$file1/delivery.complete ];then
 			echo "mv $1/$file1 $2"
-			sudo echo "mv $1/$file1 $2" >> /home/yangshiwuxi/log/$3
-			sudo mv $1/$file1 $2/
+			sudo mkdir $2/$file1
+			sudo find $1/$file1 -not -name delivery.complete -type f -exec mv {} $2/$file1/ \;
+			sudo mv $1/$file1/delivery.complete $2/$file1
 		fi
 	done
 }
