@@ -208,15 +208,16 @@ def produceMP4(para,key):
     }
 
     coded_height = para['ffprobe']['streams'][para['vstream_index']]['coded_height']
+    height = para['ffprobe']['streams'][para['vstream_index']]['height']
     bit_rate = int(para['ffprobe']['format']['bit_rate'])
-    if 720 == coded_height:
+    if 720 == coded_height or 720 == height:
         if 2000000 > bit_rate:
             file_object.write('ERROR:720p bitrate<2M:' + key.name + '\n')
             print 'ERROR:720p bitrate<2M:' + key.name
             return 1
         else:
             job_outputs = [ hls_2000k]
-    elif 1088 == coded_height or 1080 == coded_height:
+    elif 1088 == coded_height or 1080 == coded_height or 1080 == height:
         if 4000000 > bit_rate:
             file_object.write('ERROR:1080p bitrate<4M:' + key.name + '\n')
             print 'ERROR:1080p bitrate<4M:'
