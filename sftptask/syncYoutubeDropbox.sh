@@ -30,12 +30,13 @@ function fun(){
 		# 	sudo chmod 777 /home/yangshiwuxi/log/$3
 		# fi
 
-		if [ -f $1/$file1/delivery.complete ];then
+		if [ -d $1/$file -a -f $1/$file1/delivery.complete ];then
 			echo "mv $1/$file1 $2"
 			sudo mkdir $2/$file1
-			sudo find $1/$file1 -not -name delivery.complete -type f -exec mv {} $2/$file1/ \;
+			sudo find $1/$file1 -not -name delivery.complete -type f -print -exec mv {} $2/$file1/ \;
 			sudo mv $1/$file1/delivery.complete $2/$file1
-			touch /home/yangshiwuxi/log/delivery.complete
+			sudo rmdir $1/$file1
+			sudo touch /home/yangshiwuxi/log/delivery.complete
 		fi
 	done
 }
