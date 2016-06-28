@@ -36,7 +36,7 @@ function fun(){
 			sudo find $1/$file1 -not -name delivery.complete -type f -print -exec mv {} $2/$file1/ \;
 			sudo mv $1/$file1/delivery.complete $2/$file1
 			sudo rmdir $1/$file1
-			sudo touch /home/yangshiwuxi/log/delivery.complete
+			# sudo touch /home/yangshiwuxi/log/delivery.complete
 		fi
 
 		if [ -d $1/$file -a -f $1/$file1/delivery3.complete ];then
@@ -51,7 +51,7 @@ function fun(){
 			sudo mv $1/$file1/delivery3.complete $2/$file1/delivery.complete
 
 			sudo rmdir $1/$file1
-			sudo touch /home/yangshiwuxi/log/delivery.complete
+			# sudo touch /home/yangshiwuxi/log/delivery.complete
 		fi
 
 		if [ -d $1/$file -a -f $1/$file1/delivery2.complete ];then
@@ -60,7 +60,7 @@ function fun(){
 			find $1/$file1 -not -name delivery2.complete -type f -print -exec cp {} /mnt/s3/zhongguolan/yangshiwuxi/$file1/ \;
 			cp $1/$file1/delivery2.complete /mnt/s3/zhongguolan/yangshiwuxi/$file1
 			sudo rm -rf $1/$file1
-			sudo touch /home/yangshiwuxi/log/delivery.complete
+			# sudo touch /home/yangshiwuxi/log/delivery.complete
 		fi
 
 	done
