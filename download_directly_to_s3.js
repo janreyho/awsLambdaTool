@@ -18,9 +18,9 @@ var Pusher = require('pusher');
 // var airbrake = require('airbrake').createClient("117109", "3d3cc8749439b5878038d22d079ce0bf");
 
 var pusher = new Pusher({
-  appId: '220674',
-  key: '65a7daa2d92d664e54ec',
-  secret: '7435d50f2981e18de1d5',
+  appId: process.env.PUSHER_APP_ID, //'220674',
+  key: process.env.PUSHER_KEY, //'65a7daa2d92d664e54ec',
+  secret: process.env.PUSHER_SECRET, //'7435d50f2981e18de1d5',
   encrypted: true
 });
 
