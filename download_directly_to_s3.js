@@ -75,7 +75,7 @@ function upload(url, out, size, eid) {
   uploader.on('error', function (e) {
     console.log('Upload error: ', e);
     notify_download_progress(eid, '-1');
-    pusher.trigger('vego_channel', 'get_error_'+eid, {'rate': -1});
+    pusher.trigger('vego_channel', 'get_error_'+eid, {'message': e});
   });
 
   uploader.begin(); // important if callback not provided.
