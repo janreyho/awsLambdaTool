@@ -84,8 +84,8 @@ function upload(url, out, size, eid) {
 function notify_to_boss(eid, stats){
   var post_data = querystring.stringify({'eid' : eid, 'state' : stats });
   var req = http.request({
-    // host: 'vrsclone.herokuapp.com',
-    host: 'mgtv.admin.vrsclone.dev',
+    host: 'vrsclone.herokuapp.com',
+    // host: 'mgtv.admin.vrsclone.dev',
     path: '/api/v1/episodes/transfer.json',
     method: 'POST',
     headers: {
@@ -103,8 +103,8 @@ function notify_to_boss(eid, stats){
 function notify_download_progress(eid, rate){
   var post_data = querystring.stringify({'eid' : eid, 'rate' : rate });
   var req = http.request({
-    // host: 'vrsclone.herokuapp.com',
-    host: 'mgtv.admin.vrsclone.dev',
+    host: 'vrsclone.herokuapp.com',
+    // host: 'mgtv.admin.vrsclone.dev',
     path: '/api/v1/episodes/download_progress.json',
     method: 'POST',
     headers: {
