@@ -1,11 +1,5 @@
 # aws－lambda 转码服务
 
-## 前提条件
-* Python 2.7 (At the time of writing this, AWS Lambda only supports Python 2.7).
-* Pip (~8.1.1)
-* Virtualenv (~15.0.0)
-* Virtualenvwrapper (~4.7.1)
-
 ## 请求数据格式
 
 	{
@@ -68,9 +62,6 @@ x-api-key字段需要更换为access key
 
 ## 开发方法
 仅使用转码服务，下面内容无需看
-Python-lambda is a toolset for developing and deploying serverless Python code in AWS Lambda.
-
-Begin by creating a new virtualenv and project folder.
 
 	$ mkvirtualenv pylambda
 	(pylambda) $ mkdir folder
@@ -82,9 +73,3 @@ This will create the following files: event.json, __init__.py, service.py, and c
 	(pylambda) $ lambda invoke -v		//本地测试
 	(pylambda) $ lambda deploy			//部署到awsLambda
 
-
-## 备注
-
-[python-lambda](https://github.com/nficano/python-lambda)
-
-[使用virtualenv搭建独立的Python环境](http://qicheng0211.blog.51cto.com/3958621/1561685)
