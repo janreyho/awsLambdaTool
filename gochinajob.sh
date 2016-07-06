@@ -33,16 +33,13 @@ fi
 tree $localdir >> $logpath"/"treelogfile
 
 cat $txbtool/$2.json >> $logpath"/"treelogfile
+echo "$txbtool"/"sendmail.py -s $2'_'$3'newtree' -f $logpath"/"treelogfile"
+python $txbtool"/"sendmail.py -s $2'_'$3'newtree' -f $logpath"/"treelogfile
 if [ "no" = $1 ];then
-	echo "/usr/bin/mail -s $2'_'$3'更新tree' $mailrecvers < $logpath"/"treelogfile"
-	python $txbtool"/"sendmail.py -s $2'_'$3'更新tree' $logpath"/"treelogfile
 	if [ "tuxiaobei" = $2 ];then
 		curl -F stream=@$txbtool/$2.json 'http://vrsclone.herokuapp.com/api/v1/episodes/incoming.json'
 	fi
 	mv $txbtool/$2.json $datapath/$2"_"$3.json
-else
-	echo "/usr/bin/mail -s $2'_'$3'更新tree' $mailrecverstest < $logpath"/"treelogfile"
-	python $txbtool"/"sendmail.py -s $2'_'$3'更新tree' $logpath"/"treelogfile
 fi
 
 echo "cp -rf $localdir"/"* $s3dir"

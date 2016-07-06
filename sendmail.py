@@ -51,5 +51,5 @@ if __name__ == '__main__':
     f=open(para['-f'])
     ff=f.read()
     print ff
-    # sendemail(para['-s'],ff)
+    sendemail(para['-s'],ff)
 
