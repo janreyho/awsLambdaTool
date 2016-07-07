@@ -232,5 +232,5 @@ def handler(event, context):
             out['videos'].append(video)
 
     data = json.dumps(out)
-    sendemail('lambdaTranscoder',logstr+data)
+    # sendemail('lambdaTranscoder',logstr+data)
     return data
