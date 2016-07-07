@@ -196,6 +196,7 @@ def produceMP4(event,job,video,key):
     job['create_job_request'] = create_job_request
 
 def handler(event, context):
+    global logstr
     out = {}
     out['videos'] = []
     logstr = ''
