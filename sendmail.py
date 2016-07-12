@@ -33,7 +33,7 @@ def procpara(para):
 def sendemail(subject,data):
     sesconn = boto.ses.connect_to_region('us-west-2')
 
-    email_from = 'janreyho@gmail.com'
+    email_from = 'nonreply@gochinatv.com'
     email_to = ['hejiayi@gochinatv.com','zhixueyong@gochinatv.com','lisi@gochinatv.com','panxinming@gochinatv.com','zhangyue@gochinatv.com','caolei@gochinatv.com','yangyang@gochinatv.com','yuzebin@gochinatv.com','fengzhiwen@gochinatv.com']
     response = sesconn.send_email(email_from,subject,data,email_to)
 
